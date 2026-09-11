@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#ef6dd9" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>Charm Ranking Rush</title>
+  <style>
+    :root {
+      --bg1: #ff8ed8;
+      --bg2: #cc79ff;
+      --bg3: #8d69ff;
+      --card: rgba(255,255,255,.18);
+      --card-border: rgba(255,255,255,.34);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,.88);
+      --accent: #ffd85d;
+      --accent2: #ffcf37;
+      --shadow: 0 16px 40px rgba(122, 27, 124, .22);
+      --radius-xl: 26px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-pill: 999px;
+      --page-w: min(100%, 480px);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,255,255,.28), transparent 18%),
+        radial-gradient(circle at 90% 14%, rgba(255,230,140,.18), transparent 15%),
+        radial-gradient(circle at 20% 70%, rgba(255,255,255,.14), transparent 16%),
+        linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 48%, var(--bg3) 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(28px);
+      opacity: .45;
+      z-index: 0;
+    }
+    body::before {
+      width: 210px; height: 210px;
+      background: rgba(255,220,100,.3);
+      top: 8%; left: -60px;
+    }
+    body::after {
+      width: 240px; height: 240px;
+      background: rgba(255,255,255,.18);
+      right: -90px; bottom: 12%;
+    }
+
+    .page {
+      width: var(--page-w);
+      margin: 0 auto;
+      padding: 16px 14px calc(28px + env(safe-area-inset-bottom));
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-wrap {
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 18px 44px rgba(117, 29, 128, .28);
+      background: rgba(255,255,255,.12);
+    }
+
+    .hero {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .time-pill {
+      margin: 14px auto 18px;
+      width: fit-content;
+      max-width: 100%;
+      padding: 10px 18px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(135deg, rgba(255,255,255,.95), rgba(255,236,250,.9));
+      color: #db46b8;
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 1.35;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(163, 48, 160, .18);
+      border: 1px solid rgba(255,255,255,.8);
+    }
+
+    .section {
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 18px 16px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      margin-bottom: 12px;
+    }
+
+    .section p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+    .section p + p { margin-top: 10px; }
+    .section strong { color: #fff; }
+
+    .ranking-card {
+      margin: 14px 0 12px;
+      padding: 10px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.26);
+      border-radius: 20px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+    }
+
+    .ranking-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      background: rgba(255,255,255,.2);
+    }
+
+    .reward-box {
+      margin-top: 14px;
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.1));
+      border: 1px solid rgba(255,255,255,.32);
+    }
+
+    .reward-title {
+      font-size: 16px;
+      line-height: 1.55;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    .coins-highlight {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .coins-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ffe36b 0%, #ffb73b 55%, #ff8f2b 100%);
+      color: #8a2900;
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 1000;
+      letter-spacing: .01em;
+      box-shadow: 0 14px 28px rgba(255, 166, 37, .3), inset 0 2px 0 rgba(255,255,255,.45);
+      text-shadow: 0 1px 0 rgba(255,255,255,.35);
+    }
+
+    .coins-plus {
+      font-size: 15px;
+      line-height: 1.5;
+      font-weight: 800;
+      color: #fff5ce;
+    }
+
+    .frames-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .frame-card {
+      background: rgba(245, 249, 250, .92);
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: 22px;
+      padding: 14px 12px 12px;
+      text-align: center;
+      box-shadow: 0 10px 22px rgba(100, 17, 104, .12);
+    }
+
+    .frame-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 18px;
+      background: #edf3f4;
+    }
+
+    .frame-name {
+      margin-top: 12px;
+      font-size: 16px;
+      font-weight: 900;
+      color: #145e7a;
+    }
+
+    .frame-days {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #6e83a0;
+      font-weight: 800;
+    }
+
+    .gift-note {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(255,245,173,.22), rgba(255,168,218,.18));
+      border: 1px solid rgba(255,255,255,.32);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      box-shadow: 0 12px 26px rgba(127, 29, 120, .12);
+    }
+
+    .gift-note-icon {
+      flex: 0 0 32px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.25);
+      font-size: 18px;
+    }
+
+    .gift-note-text {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .cta-box {
+      text-align: center;
+      padding-top: 18px;
+      padding-bottom: 18px;
+    }
+
+    .cta-text {
+      font-size: 21px;
+      line-height: 1.5;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+
+    .cta-sub {
+      font-size: 14px;
+      line-height: 1.55;
+      color: rgba(255,255,255,.82);
+      margin-bottom: 16px;
+    }
+
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 15px 18px;
+      font-size: 16px;
+      line-height: 1.35;
+      font-weight: 900;
+      color: #ffffff;
+      background: linear-gradient(135deg, #27cf72, #16b55a);
+      box-shadow: 0 14px 30px rgba(17, 135, 73, .26);
+    }
+
+    .wa-icon {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.16);
+      display: inline-grid;
+      place-items: center;
+      font-size: 13px;
+    }
+
+    .footer-tip {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,.72);
+    }
+
+    @media (max-width: 540px) {
+      .section {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(255,255,255,.20);
+      }
+      .ranking-card, .reward-box, .gift-note, .frame-card {
+        contain: layout paint;
+      }
+    }
+
+    @media (min-width: 420px) {
+      .page { padding-left: 16px; padding-right: 16px; }
+      .section { padding: 20px 18px; }
+      .time-pill { font-size: 15px; }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .hero-wrap,
+      .section,
+      .wa-btn,
+      .frame-card {
+        transition: transform .28s ease, box-shadow .28s ease;
+      }
+      .hero-wrap:hover,
+      .section:hover,
+      .frame-card:hover {
+        transform: translateY(-2px);
+      }
+      .wa-btn:hover {
+        transform: translateY(-1px);
+      }
+    }
+  </style>
+  <link rel="preload" as="image" href="assets/charm-hero-banner-v2.webp" />
+</head>
+<body>
+  <main class="page">
+    <div class="hero-wrap">
+      <img
+        class="hero"
+        src="assets/charm-hero-banner-v2.webp"
+        alt="Charm Ranking Rush banner"
+        width="1044"
+        height="348"
+        decoding="async"
+        fetchpriority="high"
+      />
+    </div>
+
+    <div class="time-pill">Event Time: Sep 12nd–15th</div>
+
+    <section class="section">
+      <div class="eyebrow">🏆 Daily Top 1 Rewards</div>
+      <p>
+        During the event from <strong>Sep 12 to Sep 15</strong>, the
+        <strong>No.1 user on the daily Charm Ranking</strong> will win <strong>TWO rewards</strong>!
+      </p>
+
+      <div class="ranking-card">
+        <img
+          class="ranking-img"
+          src="assets/charm-ranking-v2.webp"
+          alt="Charm ranking screenshot"
+          width="720"
+          height="513"
+          loading="lazy"
+          decoding="async"
+          fetchpriority="low"
+        />
+      </div>
+
+      <div class="reward-box">
+        <div class="reward-title">🎁 Reward Details</div>
+        <div class="coins-highlight"><span class="coins-badge">50,000 Coins</span><span class="coins-plus">+ ALL 4 Zodiac Seat Frames (10 days each)</span></div>
+
+        <div class="frames-grid">
+          <div class="frame-card">
+            <img src="assets/leo-seat-frame-v2.webp" alt="Leo seat frame" width="618" height="640" loading="lazy" decoding="async" fetchpriority="low" />
+            <div class="frame-name">Leo</div>
+            <div class="frame-days">10 days</div>
+          </div>
+          <div class="frame-card">
+            <img src="assets/virgo-seat-frame-v2.webp" alt="Virgo seat frame" width="639" height="640" loading="lazy" decoding="async" fetchpriority="low" />
+            <div class="frame-name">Virgo</div>
+            <div class="frame-days">10 days</div>
+          </div>
+          <div class="frame-card">
+            <img src="assets/libra-seat-frame-v2.webp" alt="Libra seat frame" width="640" height="637" loading="lazy" decoding="async" fetchpriority="low" />
+            <div class="frame-name">Libra</div>
+            <div class="frame-days">10 days</div>
+          </div>
+          <div class="frame-card">
+            <img src="assets/scorpio-seat-frame-v2.webp" alt="Scorpio seat frame" width="640" height="637" loading="lazy" decoding="async" fetchpriority="low" />
+            <div class="frame-name">Scorpio</div>
+            <div class="frame-days">10 days</div>
+          </div>
+        </div>
+
+        <div class="gift-note">
+          <div class="gift-note-icon">✨</div>
+          <div class="gift-note-text">You can <strong>keep the seat frames for yourself</strong> or <strong>gift them to your friends</strong> — the choice is yours!</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta-box">
+      <div class="cta-text">👉 Who will be the <strong>most charming star of the day</strong>?</div>
+      <div class="cta-sub">If you have any questions, feel free to contact us on WhatsApp.</div>
+      <a class="wa-btn" href="https://wa.me/8618646390081" target="_blank" rel="noopener noreferrer">
+        <span class="wa-icon">✆</span>
+        WhatsApp: +86 186 4639 0081
+      </a>
+    </section>
+  </main>
+</body>
+</html>
